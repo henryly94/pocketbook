@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from flask import Flask
-
+from models import Person, Transaction, Group
 app = Flask(__name__)
 
 @app.route('/')
