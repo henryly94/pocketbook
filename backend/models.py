@@ -1,4 +1,7 @@
 #!/usr/bin/python
+import os
+import json
+import pickle
 
 class Person:
     def __init__(self, name):
@@ -6,11 +9,8 @@ class Person:
         self.groups = set()
         self.status = {}
     
-    def __hash__(self):
-        return hash(self.name)
-    
     def join_group(self, group):
-        self.group.update(group)
+        self.groups.update([group,] )
         
     def iocome(self, other, amount):
         if other in self.status:
@@ -18,12 +18,21 @@ class Person:
         else:
             self.status[other] = amount
     
+    def query_status(self):
+        status = { 
+                "name": self.name,
+                }
+        status['relation'] = [(other.name, self.status[other]) for other in self.status]
+        status['groups'] = [g.name for g in list(self.groups)]
+        return status
+
     def show_status(self):
         print("==" * 20)
         print("Name: ", self.name)
         print("==" * 20)
         for other in self.status:
-            print("\t", other.name, self.status[other])
+            if self.status[other] != 0.0:
+                print("\t", other.name, self.status[other])
         print("==" * 20)
         
     
@@ -34,14 +43,22 @@ class Transaction:
         self.payer = info['payer']
         self.time = info['time']
         
+    def __str__(self):
+        participants = ', '.join([person.name for person in self.participants])
+        payer = self.payer.name
+        return 'Time: %s\nParticipants: %s\nPayer: %s\nTotal %s' % (self.time, participants, payer, self.total)
+    
+    __repr__ = __str__
+    
 class Group:
-    def __init__(self, members=None):
+    def __init__(self, name='default_name', members=None):
         if members is not None:
             self.members = set(members)
         else:
             self.members = set()
         self.transactions = []
-            
+        self.name = name
+        
     def add_members(self, new_members):
         self.members.update(set(new_members))
         
@@ -51,15 +68,35 @@ class Group:
         num_participants = len(transaction.participants)
         value = total / float(num_participants)
         payer = transaction.payer
+
+        for member in self.members:
+        if payer not in self.members:
+            return False
+        for participant in transaction.participants:
+            if participant not in self.members:
+                return False
         for participant in transaction.participants:
             if participant is not payer:
                 participant.iocome(payer, -value)
                 payer.iocome(participant, value)
-    
+        return True
+                
+    def add_transactions(self, transactions):
+        for transaction in transactions:
+            self.add_transaction(transaction)
+   
+    def query_member_status(self):
+        if not self.members: return "No Members"
+        return [member.query_status() for member in self.members]
+
     def show_status(self):
         for member in self.members:
             member.show_status()
-            
+    
+    def show_transaction(self):
+        if not self.transactions: return "No Transactions"
+        return 'Transactions:\n' + '\n'.join(map(str, self.transactions))
+    
     def simplify(self):
         if len(self.members) < 3:
             return
@@ -81,7 +118,6 @@ class Group:
                             i_cnt[(i+1) % 3] += 1
                             o_cnt[i] += 1
                 a, b, c = triplet
-                print(a.name, b.name, c.name, cnt, i_cnt, o_cnt)
                 if cnt == 2:
                     if max(i_cnt) == 1 and max(o_cnt) == 1:
                         for i in range(3):
@@ -137,4 +173,103 @@ class Group:
                 for c in members[i+j+2:]:
                     yield a, b, c
             
+class Management:
+    
+    def __init__(self, save_path='.'):
+        self.people = {}
+        self.groups = {}
+        self.save_path = save_path
+        self.FILENAME_PEOPLE = 'people'
+        self.FILENAME_GROUP = 'group'
+        
+    def __add_person(self, person):
+        if person.name in self.people:
+            return
+        self.people[person.name] = person
+    
+    def __add_group(self, group):
+        if group.name in self.groups:
+            return
+        self.groups[group.name] = group
+    
+    def add_person(self, name):
+        if name not in self.people:
+            new_person = Person(name)
+            self.people[name] = new_person
+            return True
+        else:
+            return False
+    
+    def add_group(self, name):
+        if name not in self.groups:
+            new_group = Group(name)
+            self.groups[name] = new_group
+            return True
+        else:
+            return False
+        
+    def people_join_group(self, people_names, group_name):
+        try:
+            group = self.groups[group_name]
+            for person_name in people_names:
+                if person_name in self.people:
+                    person = self.people[person_name]
+                    person.join_group(group)
+                    group.add_members([person, ])
+                    
+            return True
+        except Exception as e:
+            return False
+    
+    def add_transaction(self, group_name, transaction_info):
+        try:
+            if group_name not in self.groups:
+                return False
+            participants = [self.people[person_name] for person_name in transaction_info['participants']]
+            payer = self.people[transaction_info['payer']]
+            transaction_info['participants'] = participants
+            transaction_info['payer'] = payer
+            return self.groups[group_name].add_transaction(Transaction(transaction_info))
+        except Exception as e:
+            print e 
+            return False
+    
+    def query_group_status(self, group_name):
+        if group_name not in self.groups:
+            return
+        group = self.groups[group_name]
+        
+        group_info = {
+                'group_name': group_name,
+                'group_members': [m.name for m in list(group.members)],
+                'group_size': len(group.members),
+                'group_member_status': group.query_member_status()
+                }
+        return group_info
+    
+    def save_status(self):
+        with open(os.path.join(self.save_path, self.FILENAME_PEOPLE), 'w') as f_people:
+            pickle.dump(self.people, f_people)
+        
+        with open(os.path.join(self.save_path, self.FILENAME_GROUP), 'w') as f_group:
+            pickle.dump(self.groups, f_group)
+    
+    
+    def load_status(self, load_path):
+        with open(os.path.join(self.save_path, self.FILENAME_PEOPLE), 'r') as f_people:
+            self.people = pickle.load(f_people)
+           
+        with open(os.path.join(self.save_path, self.FILENAME_GROUP), 'r') as f_group:
+            self.groups = pickle.load(f_group)
+        for group_name in self.groups:
+            group = self.groups[group_name]
+            member_list = [member.name for member in group.members]
+            group.members = set([self.people[person_name] for person_name in member_list])
             
+        for person_name in self.people:
+            person = self.people[person_name]
+            group_list = [group.name for group in person.groups]
+            person.groups = set([self.groups[name] for name in group_list])
+
+        self.save_path = load_path
+   
