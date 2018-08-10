@@ -1,0 +1,67 @@
+/* pages/main/main.wxss */
+.swiper-tab{
+    width: 100%;  
+    background-color: #b6fce3;
+    border-bottom: 5rpx solid #668294;  
+    text-align: center; 
+    font-size: 15rpx;
+    line-height: 80rpx;
+}
+.swiper-tab-list{
+    font-size: 30rpx;  
+    display: inline-block;  
+    width: 25%;  
+    color: #777777;  
+}
+.on{
+    color: #888888;  
+    background-color: rgba(77, 255, 216, 0.5);
+    border-bottom: 5rpx solid #01687abb;
+}
+.swiper-box{ 
+    display: block;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+ }
+.swiper-box view{  
+    text-align: center;  
+}
+
+.main-input {
+  color: #B6FCE3;
+  padding-left: 25rpx;
+  padding-right: 25rpx;
+  background-color: rgba(255, 255, 255, 0);
+  border: 15rpx;
+  text-align: left;
+}
+
+.main-label {
+  color: #DCFCF9;
+  background-color:#00000000;
+  padding:5rpx;
+}
+
+.horizontal-container {
+  height: fit-content;
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  align-items:center;
+  justify-content: space-between;
+  padding: 15rpx;
+  background-color: #7DBAC9;
+} 
+
+.main-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  justify-content: first baseline;
+  padding: 200rpx 0;
+  box-sizing: border-box;
+  /* background-color: #DCFCF9;  */
+  background-color: #FCB1AE;
+} 
