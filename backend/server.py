@@ -65,7 +65,14 @@ def api_create_user(user_name):
     else:
         return json_msg(False, "User Already Exist!", 400)
 
-
+@app.route('/api/user/status/<user_name>', methods=['GET'])
+def api_status_user(user_name):
+    msg = ms.query_user_status(user_name)
+    if msg:
+        msg['exist'] = True
+    else:
+        msg = {'exist': False}
+    return jsonify(msg)
 
 if __name__ == '__main__':
     app.run()

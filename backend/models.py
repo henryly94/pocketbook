@@ -22,7 +22,11 @@ class Person:
         status = { 
                 "name": self.name,
                 }
-        status['relation'] = [(other.name, self.status[other]) for other in self.status]
+        status['relation'] = [
+                (other.name, self.status[other]) 
+                for other in self.status
+                if self.status[other] != 0.0
+                ]
         status['groups'] = [g.name for g in list(self.groups)]
         return status
 
@@ -68,10 +72,9 @@ class Group:
         num_participants = len(transaction.participants)
         value = total / float(num_participants)
         payer = transaction.payer
-
         for member in self.members:
-        if payer not in self.members:
-            return False
+            if payer not in self.members:
+                return False
         for participant in transaction.participants:
             if participant not in self.members:
                 return False
@@ -246,6 +249,13 @@ class Management:
                 'group_member_status': group.query_member_status()
                 }
         return group_info
+   
+    def query_user_status(self, user_name):
+        if user_name not in self.people:
+            return
+
+        user = self.people[user_name]
+        return user.query_status()
     
     def save_status(self):
         with open(os.path.join(self.save_path, self.FILENAME_PEOPLE), 'w') as f_people:
