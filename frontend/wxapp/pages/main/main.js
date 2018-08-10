@@ -42,6 +42,33 @@ Page({
     }
   },  
 
+  requestInfo: function(){
+    var that = this;
+    wx.request({
+      url: that.data.urlAPIQueryUserStatus + that.data.userInfo.nickName,
+      success: function (res) {
+        console.log(res.header);
+        console.log(res.statusCode);
+        if (res.data != null) {
+          var groups = res.data.groups.join(', ')
+          var relations = [];
+          for (var i = 0; i < res.data.relation.length; i++) {
+            relations.push(res.data.relation[i].join(": "));
+          }
+          var relationString = relations.join(', ');
+          var resString = `Name: ${res.data.name}\nGroups: ${groups}\nRelations: ${relationString}`;
+          that.setData({
+            info: resString,//JSON.stringify(res.data, null, '  '),
+          })
+        } else {
+          that.setData({
+            info: "Getting Null Response!"
+          })
+        }
+      }
+    });
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -71,29 +98,7 @@ Page({
       urlAPIQueryUserStatus: that.data.urlAPIUserBase + 'status/',
     });
 
-    wx.request({
-      url: that.data.urlAPIQueryUserStatus + that.data.userInfo.nickName,
-      success: function (res) {
-        console.log(res.header);
-        console.log(res.statusCode);
-        if (res.data != null) {
-          var groups = res.data.groups.join(', ')
-          var relations = [];
-          for (var i = 0; i < res.data.relation.length; i++) {
-            relations.push(res.data.relation[i].join(": "));
-          }
-          var relationString = relations.join(', ');
-          var resString = `Name: ${res.data.name}\nGroups: ${groups}\nRelations: ${relationString}`;
-          that.setData({
-            info: resString,//JSON.stringify(res.data, null, '  '),
-          })
-        } else {
-          that.setData({
-            info: "Getting Null Response!"
-          })
-        }
-      } 
-    });
+    that.requestInfo();
 
   },
 
