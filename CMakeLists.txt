@@ -8,10 +8,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(external)
 
 include_directories(
-    external/abseil-cpp
+    external/abseil-cpp/absl
 )
 
 set(INTERNAL_SOURCE
+    src/book.cc
+    src/entity.cc
 )
 
 set(EXTERNAL_SOURCE
@@ -19,12 +21,14 @@ set(EXTERNAL_SOURCE
 
 set(EXTERNAL_LIBS
     absl::strings
-    absl::container
+    absl::flat_hash_map
+    absl::time
 )
 
 add_executable(
     main
     src/book_main.cc
+    ${INTERNAL_SOURCE}
     ${EXTERNAL_SOURCE}
 )
 
