@@ -9,53 +9,13 @@ add_subdirectory(external)
 
 include_directories(
     external/abseil-cpp/absl
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/src
     ${PROTOBUF_INCLUDE_DIR}
 )
 
-# Setup ProtoBufs
-include(FindProtobuf)
-find_package(Protobuf REQUIRED)
+add_subdirectory(src)
 
-protobuf_generate_cpp(
-    PROTO_SRC 
-    PROTO_HEADER 
-    src/message.proto)
-
-add_library(
-    proto
-    ${PROTO_SRC}
-    ${PROTO_HEADER}
-)
-
-set(INTERNAL_LIBS
-    proto
-)
-
-set(INTERNAL_SOURCE
-    src/book.cc
-    src/entity.cc
-)
-
-set(EXTERNAL_SOURCE
-)
-
-set(EXTERNAL_LIBS
-    absl::strings
-    absl::flat_hash_map
-    absl::time
-    ${PROTOBUF_LIBRARY}
-)
-
-add_executable(
-    main
-    src/book_main.cc
-    ${INTERNAL_SOURCE}
-    ${EXTERNAL_SOURCE}
-)
-
-target_link_libraries(
-    main
-    ${EXTERNAL_LIBS}
-    ${INTERNAL_LIBS}
+install(
+    TARGETS main
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
