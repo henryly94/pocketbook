@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package yypocketbook;
+package yypocketbook.protobuf;
 
 message Transaction {
     enum Type {
