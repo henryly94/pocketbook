@@ -11,12 +11,15 @@
 #include "book.h"
 
 #include "messages.pb.h"
+#include "test.pb.h"
 
 using yypocketbook::Entity;
 using yypocketbook::Book;
 
 int main() {
     std::cout << "Hello Book!\n";
+    yypocketbook::protobuf::Entity entity;
+    yypocketbook::protobuf::Dummy dummy;
     Book book;
     book.LoadFromDisk("../src/testdata/checkpoint.tsv");
     book.AddTransaction(100, "Amex Gold", "3C product", "By a monitor", absl::Now());

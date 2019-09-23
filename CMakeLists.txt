@@ -13,6 +13,14 @@ include_directories(
     ${PROTOBUF_INCLUDE_DIR}
 )
 
+# Setup ProtoBufs
+include(FindProtobuf)
+find_package(Protobuf CONFIG REQUIRED)
+message(STATUS "Using Protobuf ${protobuf_VERSION}")
+
+find_package(gRPC CONFIG REQUIRED)
+message(STATUS "Using gRPC ${gRPC_VERSION}")
+
 add_subdirectory(src)
 
 install(

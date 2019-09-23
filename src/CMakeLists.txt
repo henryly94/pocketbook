@@ -1,12 +1,8 @@
-# Setup ProtoBufs
-include(FindProtobuf)
-find_package(Protobuf REQUIRED)
-
-
 protobuf_generate_cpp(
     PROTO_SRC 
     PROTO_HEADER 
     messages.proto
+    test.proto
 )
 
 add_library(
