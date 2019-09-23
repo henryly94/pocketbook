@@ -35,7 +35,15 @@ public:
     static const absl::flat_hash_map<std::string, Type> string_to_type_;
     Entity() {}
 
-    explicit Entity(absl::string_view name, Type type, double amount=0.0) :name(name), type(type), amount(amount), transaction_history() {} 
+    explicit Entity(
+        absl::string_view name, 
+        Type type, 
+        double amount=0.0,
+        std::vector<Transaction> transaction_history={}) 
+        :name(name), 
+        type(type), 
+        amount(amount), 
+        transaction_history(std::move(transaction_history)) {} 
 
     Entity(const Entity& entity) 
         :name(entity.name), 
@@ -53,6 +61,18 @@ public:
 
     Type GetType() const {
         return type;
+    }
+
+    double GetAmount() const {
+        return amount;
+    }
+    
+    std::string GetName() const {
+        return name;
+    }
+
+    const std::vector<Transaction>& GetHistory() const {
+        return transaction_history;
     }
 
     void AddTransaction(const Transaction& transaction);

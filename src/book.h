@@ -24,11 +24,15 @@ public:
 
     void AddTransaction(double amount, absl::string_view from_account_name, const std::string& to_account_name, absl::string_view detail, absl::Time timestamp);
     
+    void LoadTSVConfig(absl::string_view file_path);
+
+    void DumpToDisk(absl::string_view file_path);
+
+    void LoadFromDisk(absl::string_view file_path);
+
     void Print() const;
 
     void PrintWithFilter(EntityFilter filter) const;
-
-    void LoadTSV(absl::string_view file_path);
 
 private:
     absl::flat_hash_map<std::string, Entity> entity_map_; 

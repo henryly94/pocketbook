@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "absl/time/time.h"
 #include "absl/strings/str_split.h"
 
 namespace yypocketbook {
@@ -43,12 +44,56 @@ void Book::AddTransaction(double amount, absl::string_view from_account_name, co
     to_account.AddTransaction(transaction);
 }
 
-void Book::LoadTSV(absl::string_view file_path) {
+void Book::LoadTSVConfig(absl::string_view file_path) {
     std::ifstream in(file_path.data());
     std::string line;
     while (std::getline(in, line)) {
         std::vector<std::string> columns = absl::StrSplit(line, '\t');
         AddEntity(Entity::string_to_type_.at(columns[1]), columns[0], stod(columns[2]));
+    }
+}
+
+void Book::DumpToDisk(absl::string_view file_path) {
+    std::ofstream out(file_path.data());
+    for (const auto& name_and_entity : entity_map_) {
+        const auto& name = name_and_entity.first;
+        const auto& entity = name_and_entity.second;
+        out << name << '\t' << entity.type_string_[entity.GetType()]
+            << '\t' << entity.GetAmount();
+        for (const auto& transaction : entity.GetHistory()) {
+            out << '\t' << transaction.type 
+                << '\t' << transaction.amount
+                << '\t' << transaction.timestamp 
+                << '\t' << transaction.detail;
+        }
+        out << '\n';
+    }
+}
+
+void Book::LoadFromDisk(absl::string_view file_path) {
+    std::ifstream in(file_path.data());
+    std::string line;
+    while (std::getline(in, line)) {
+        std::vector<std::string> tokens = absl::StrSplit(line, '\t');
+        std::vector<Transaction> transaction_history;
+        std::string name{tokens[0]};
+        Entity::Type type = Entity::string_to_type_.at(tokens[1]);
+        double amount = std::stod(tokens[2]);
+        for (int i=3; i<tokens.size(); i+=4) {
+            Transaction transaction;
+            transaction.type = std::stoi(tokens[i]) ? 
+                Transaction::DEBIT :
+                Transaction::CREDIT;
+            transaction.amount = std::stod(tokens[i+1]);
+            absl::ParseTime(
+                absl::RFC3339_full,
+                tokens[i+2],
+                &transaction.timestamp,
+                nullptr);
+            transaction.detail = std::move(tokens[i+3]);
+            transaction_history.push_back(std::move(transaction));
+        }
+        entity_map_[name] = Entity{name, type, amount, transaction_history}; 
     }
 }
 

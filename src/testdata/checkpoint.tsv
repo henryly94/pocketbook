@@ -1,0 +1,13 @@
+3C product	Expense	400	1	100	2019-09-22T21:45:40.025982278-07:00	By a monitor	1	100	2019-09-22T21:45:40.02598679-07:00	By another monitor	1	100	2019-09-22T22:29:06.740437494-07:00	By a monitor	1	100	2019-09-22T22:29:06.740441796-07:00	By another monitor
+RSU	Revenue	0
+Discover	Liability	0
+Amex Gold	Liability	200	0	100	2019-09-22T21:45:40.025982278-07:00	By a monitor	0	100	2019-09-22T22:29:06.740437494-07:00	By a monitor
+Chase Saving	Asset	25000	1	2500	2019-09-22T21:45:40.02598887-07:00	Salary for Sept	1	2500	2019-09-22T22:29:06.740443499-07:00	Salary for Sept
+Salary	Revenue	5000	0	2500	2019-09-22T21:45:40.02598887-07:00	Salary for Sept	0	2500	2019-09-22T22:29:06.740443499-07:00	Salary for Sept
+Cash	Expense	-100	0	100	2019-09-22T21:45:40.02598679-07:00	By another monitor	0	100	2019-09-22T22:29:06.740441796-07:00	By another monitor
+Bonus	Revenue	0
+Chase Checking	Asset	2000
+Chase Freedom	Liability	0
+Last Cycle Balance	Equity	22100
+Rent	Expense	0
+Food/Restaurant	Expense	0
