@@ -10,6 +10,8 @@
 
 #include "book.h"
 
+#include "message.pb.h"
+
 using yypocketbook::Entity;
 using yypocketbook::Book;
 
