@@ -2,13 +2,14 @@
 cmake_minimum_required (VERSION 3.0)
 project (yypocketbook)
 
+add_subdirectory(external EXCLUDE_FROM_ALL)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(external)
-
 include_directories(
-    external/abseil-cpp/absl
+    external/abseil-cpp
+    external/grpc/include
     ${CMAKE_CURRENT_BINARY_DIR}/src
     ${PROTOBUF_INCLUDE_DIR}
 )
@@ -18,12 +19,9 @@ include(FindProtobuf)
 find_package(Protobuf CONFIG REQUIRED)
 message(STATUS "Using Protobuf ${protobuf_VERSION}")
 
-find_package(gRPC CONFIG REQUIRED)
-message(STATUS "Using gRPC ${gRPC_VERSION}")
-
 add_subdirectory(src)
 
 install(
-    TARGETS main
+    TARGETS main book_service_main book_client_main
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )

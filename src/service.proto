@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package yypocketbook.protobuf;
+
+import "messages.proto";
+
+service BookKeeping {
+  rpc GetBook(GetBookRequest) returns(GetBookReply) {}
+}
+
+message GetBookRequest {
+  optional fixed64 time_usec = 1;
+}
+
+message GetBookReply {
+  optional fixed64 time_usec = 1;
+  optional Book book = 2;
+}

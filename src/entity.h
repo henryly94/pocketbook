@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "absl/strings/string_view.h"
 #include "absl/container/flat_hash_map.h"
 #include "absl/container/flat_hash_set.h"
+#include "absl/time/time.h"
 
 namespace yypocketbook {
 
@@ -36,7 +36,7 @@ public:
     Entity() {}
 
     explicit Entity(
-        absl::string_view name, 
+        std::string name, 
         Type type, 
         double amount=0.0,
         std::vector<Transaction> transaction_history={}) 
