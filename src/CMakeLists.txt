@@ -87,12 +87,13 @@ target_link_libraries(
 # Util
 add_library(
     util
-    util.h
+    util.cc
 )
 target_link_libraries(
     util
     book
     messages_proto
+    absl::time
 )
 
 # Book Main
@@ -115,6 +116,7 @@ target_link_libraries(
     book_service_main
     book
     service
+    util
     grpc++_unsecure
 )
 
