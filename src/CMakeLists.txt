@@ -96,6 +96,22 @@ target_link_libraries(
     absl::time
 )
 
+# Util Test
+add_executable(
+    util_test
+    util_test.cc
+)
+target_link_libraries(
+    util_test
+    util
+    gtest
+    gmock
+)
+add_test(
+    NAME util_test
+    COMMAND util_test
+)
+
 # Book Main
 add_executable(
     main

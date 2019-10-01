@@ -7,18 +7,19 @@ add_subdirectory(external EXCLUDE_FROM_ALL)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(
-    external/abseil-cpp
-    external/grpc/include
-    ${CMAKE_CURRENT_BINARY_DIR}/src
-    ${PROTOBUF_INCLUDE_DIR}
-)
-
 # Setup ProtoBufs
 include(FindProtobuf)
 find_package(Protobuf CONFIG REQUIRED)
-message(STATUS "Using Protobuf ${protobuf_VERSION}")
+message(STATUS "Using Protobuf ${Protobuf_VERSION}")
 
+include_directories(
+    external/abseil-cpp
+    external/grpc/include
+    external/googletest/include
+    ${CMAKE_CURRENT_BINARY_DIR}/src
+    ${PROTOBUF_INCLUDE_DIR}
+)
+enable_testing()
 add_subdirectory(src)
 
 install(
