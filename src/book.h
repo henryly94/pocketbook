@@ -12,18 +12,20 @@
 namespace yypocketbook {
 
 using EntityFeature = std::pair<Entity::Type, std::string>;
-using EntityFilter = std::function<bool(const Entity&)>;
+using EntityFilter = std::function<bool(const Entity &)>;
 
 class Book {
- public:
+public:
   explicit Book() {}
-  explicit Book(const std::vector<EntityFeature>& entity_features);
+  explicit Book(const std::vector<EntityFeature> &entity_features);
 
-  void AddEntity(Entity::Type entity_type, const std::string& entity_name,
+  // TODO: Add a function to add complete entity (with
+  // transactions, converted from protobuf).
+  void AddEntity(Entity::Type entity_type, const std::string &entity_name,
                  double amount = 0);
 
   void AddTransaction(double amount, absl::string_view from_account_name,
-                      const std::string& to_account_name,
+                      const std::string &to_account_name,
                       absl::string_view detail, absl::Time timestamp);
 
   void LoadTSVConfig(absl::string_view file_path);
@@ -36,14 +38,14 @@ class Book {
 
   void PrintWithFilter(EntityFilter filter) const;
 
-  absl::flat_hash_map<std::string, Entity>& GetEntityMap() {
+  const absl::flat_hash_map<std::string, Entity> &GetEntityMap() const {
     return entity_map_;
   }
 
- private:
+private:
   absl::flat_hash_map<std::string, Entity> entity_map_;
 };
 
-}  // namespace yypocketbook
+} // namespace yypocketbook
 
-#endif  // BOOK_H_
+#endif // BOOK_H_

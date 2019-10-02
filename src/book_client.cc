@@ -5,13 +5,12 @@
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
-using yypocketbook::protobuf::GetBookRequest;
-using yypocketbook::protobuf::GetBookReply;
 using yypocketbook::protobuf::BookKeeping;
-
+using yypocketbook::protobuf::GetBookReply;
+using yypocketbook::protobuf::GetBookRequest;
 
 class BookKeepingClient {
- public:
+public:
   BookKeepingClient(std::shared_ptr<Channel> channel)
       : stub_(BookKeeping::NewStub(channel)) {}
 
@@ -42,11 +41,11 @@ class BookKeepingClient {
     }
   }
 
- private:
+private:
   std::unique_ptr<BookKeeping::Stub> stub_;
 };
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   // Instantiate the client. It requires a channel, out of which the actual RPCs
   // are created. This channel models a connection to an endpoint (in this case,
   // localhost at port 50051). We indicate that the channel isn't authenticated

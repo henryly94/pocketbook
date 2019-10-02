@@ -1,8 +1,8 @@
 #include <memory>
 
+#include "book.h"
 #include "messages.pb.h"
 #include "service.grpc.pb.h"
-#include "book.h"
 #include "util.h"
 
 #include <grpcpp/grpcpp.h>
@@ -13,16 +13,18 @@ using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
 using yypocketbook::protobuf::BookKeeping;
-using yypocketbook::protobuf::GetBookRequest;
 using yypocketbook::protobuf::GetBookReply;
+using yypocketbook::protobuf::GetBookRequest;
 
 class BookKeepingServiceImpl final : public BookKeeping::Service {
-    Status GetBook(ServerContext* context, const GetBookRequest* request, GetBookReply* reply) override {
-        yypocketbook::Book book;
-        book.LoadFromDisk("../src/testdata/checkpoint.tsv");
-        *reply->mutable_book() = std::move(yypocketbook::MakeProtoBufBook(book));
-        return Status::OK;
-    }
+  Status GetBook(ServerContext *context, const GetBookRequest *request,
+                 GetBookReply *reply) override {
+    yypocketbook::Book book;
+    book.LoadFromDisk("../src/testdata/checkpoint.tsv");
+    *reply->mutable_book() =
+        std::move(yypocketbook::Util::MakeProtobufBook(book));
+    return Status::OK;
+  }
 };
 
 void RunServer() {
@@ -45,6 +47,6 @@ void RunServer() {
 }
 
 int main() {
-    RunServer();
-    return 0;
+  RunServer();
+  return 0;
 }

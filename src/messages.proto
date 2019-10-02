@@ -3,38 +3,33 @@ syntax = "proto2";
 package yypocketbook.protobuf;
 
 message Transaction {
-    enum Type {
-        UNKNOWN_TYPE = 0;
-        CREDIT = 1;
-        DEBIT = 2;
-    }
+  enum Type {
+    UNKNOWN_TYPE = 0;
+    CREDIT = 1;
+    DEBIT = 2;
+  }
 
-    optional Type type = 1;
-    optional double amount = 2;
-    optional fixed64 time_usec = 3;
-    optional string detail = 4;
+  optional Type type = 1;
+  optional double amount = 2;
+  optional fixed64 time_usec = 3;
+  optional string detail = 4;
 }
 
-message TransactionHistory {
-    repeated Transaction transactions = 1;
-}
+message TransactionHistory { repeated Transaction transactions = 1; }
 
 message Entity {
-    enum Type {
-        UNKNOWN_TYPE = 0;
-        ASSET = 1;
-        EXPENSE = 2;
-        LIABILITY = 3;
-        EQUITY = 4;
-        REVENUE = 5;
-    }
-    optional Type type = 1;
-    optional double amount = 2;
-    optional string name = 3;
-    optional TransactionHistory transaction_history= 4;
+  enum Type {
+    UNKNOWN_TYPE = 0;
+    ASSET = 1;
+    EXPENSE = 2;
+    LIABILITY = 3;
+    EQUITY = 4;
+    REVENUE = 5;
+  }
+  optional Type type = 1;
+  optional double amount = 2;
+  optional string name = 3;
+  optional TransactionHistory transaction_history = 4;
 }
 
-message Book {
-    repeated Entity entities = 1;
-}
-
+message Book { repeated Entity entities = 1; }

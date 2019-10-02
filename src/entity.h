@@ -11,86 +11,72 @@
 namespace yypocketbook {
 
 struct Transaction {
-    enum Type {
-        CREDIT,
-        DEBIT,
-    };
-    Type type;
-    double amount;
-    absl::Time timestamp;
-    std::string detail;
+  enum Type {
+    CREDIT,
+    DEBIT,
+  };
+  Type type;
+  double amount;
+  absl::Time timestamp;
+  std::string detail;
 };
 
 class Entity {
 public:
-    enum Type {
-        ASSET = 0,
-        EXPENSE,
-        LIABILITY,
-        EQUITY,
-        REVENUE,
-    };
-    
-    static const std::vector<std::string> type_string_;
-    static const absl::flat_hash_map<std::string, Type> string_to_type_;
-    Entity() {}
+  enum Type {
+    ASSET = 0,
+    EXPENSE,
+    LIABILITY,
+    EQUITY,
+    REVENUE,
+  };
 
-    explicit Entity(
-        std::string name, 
-        Type type, 
-        double amount=0.0,
-        std::vector<Transaction> transaction_history={}) 
-        :name(name), 
-        type(type), 
-        amount(amount), 
-        transaction_history(std::move(transaction_history)) {} 
+  static const std::vector<std::string> type_string_;
+  static const absl::flat_hash_map<std::string, Type> string_to_type_;
+  Entity() {}
 
-    Entity(const Entity& entity) 
-        :name(entity.name), 
-         type(entity.type), 
-         amount(entity.amount), 
-         transaction_history(entity.transaction_history) {}
-    
-    Entity& operator=(const Entity& entity) {
-        name = entity.name;
-        type = entity.type;
-        amount = entity.amount;
-        transaction_history = entity.transaction_history;
-        return *this;
-    }
+  explicit Entity(std::string name, Type type, double amount = 0.0,
+                  std::vector<Transaction> transaction_history = {})
+      : name(name), type(type), amount(amount),
+        transaction_history(std::move(transaction_history)) {}
 
-    Type GetType() const {
-        return type;
-    }
+  Entity(const Entity &entity)
+      : name(entity.name), type(entity.type), amount(entity.amount),
+        transaction_history(entity.transaction_history) {}
 
-    double GetAmount() const {
-        return amount;
-    }
-    
-    std::string GetName() const {
-        return name;
-    }
+  Entity &operator=(const Entity &entity) {
+    name = entity.name;
+    type = entity.type;
+    amount = entity.amount;
+    transaction_history = entity.transaction_history;
+    return *this;
+  }
 
-    const std::vector<Transaction>& GetHistory() const {
-        return transaction_history;
-    }
+  Type GetType() const { return type; }
 
-    void AddTransaction(const Transaction& transaction);
+  double GetAmount() const { return amount; }
 
-    
-    absl::flat_hash_set<Type>& LeftsideType() const;
+  std::string GetName() const { return name; }
 
-    void Print() const;
+  const std::vector<Transaction> &GetHistory() const {
+    return transaction_history;
+  }
 
-    ~Entity() {}
+  void AddTransaction(const Transaction &transaction);
+
+  absl::flat_hash_set<Type> &LeftsideType() const;
+
+  void Print() const;
+
+  ~Entity() {}
+
 private:
-    Type type;
-    double amount;
-    std::string name;
-    std::vector<Transaction> transaction_history;
+  Type type;
+  double amount;
+  std::string name;
+  std::vector<Transaction> transaction_history;
 };
 
 } // namespace yypocketbook
-
 
 #endif // ENTITY_H_

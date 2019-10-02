@@ -94,6 +94,7 @@ target_link_libraries(
     book
     messages_proto
     absl::time
+    absl::flat_hash_map
 )
 
 # Util Test
